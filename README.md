@@ -35,19 +35,16 @@ Projeyi kendi bilgisayarınızda (lokalde) çalıştırmak için aşağıdaki ad
 
 ## Gelecek Planları ve Modifikasyon Hedefleri
 
-Mesut Hoca'nın "Backend dahil tam çalışan, modifiye edilmiş sürüm olacak" beklentisi doğrultusunda projede yapılacak geliştirmeler şunlardır:
+Mesut Hoca'nın "Backend dahil tam çalışan, modifiye edilmiş sürüm olacak" beklentisi doğrultusunda projede yapılacak tüm geliştirmeler **tamamen Django altyapısı ve özellikleri kullanılarak** gerçekleştirilecektir.
 
-### 1. Tasarım ve Kullanıcı Arayüzü (UI) İyileştirmeleri
-- Düz HTML sayfaları yerine **Bootstrap** framework'ü entegre edilecek.
-- Anket listesi şık **kart (card)** yapılarına dönüştürülecek.
-- Oy verme ekranı ve sonuçlar ekranı modern butonlar, renkli temalar ve hover efektleriyle zenginleştirilecek.
+### 1. Django Temelli Tasarım İyileştirmeleri
+- Orijinal düz HTML sayfaları, **Django Şablon Motoru (Template Engine)** kullanılarak daha dinamik ve şık tasarımlara (Bootstrap ile desteklenerek) entegre edilecektir. 
+- Harici bir önyüz framework'ü kullanılmadan, sayfa render işlemleri tamamen Django `views` (görünümler) üzerinden yapılacaktır.
 
-### 2. Oylama Sistemi Modifikasyonları
-- "Polls" (Anketler) konsepti, **"Teknofest Proje Oylama Sistemi"** veya benzeri kurumsal bir yapıya çevrilecek. 
-- Soru ve şık ekleme ekranları (Admin paneli haricinde, eğer gerekirse) geliştirilecek.
-- Sonuç sayfasında oy oranları sadece düz rakam olarak değil, **renkli ilerleme çubukları (Progress Bars)** ve yüzdelik dilimlerle görselleştirilecek.
+### 2. Oylama Sistemi Modifikasyonları (Django ORM ve Views)
+- "Polls" (Anketler) konsepti, **"Teknofest Proje Oylama Sistemi"** yapısına çevrilecek ve bu kapsamda **Django Modelleri (Models)** üzerinde gerekli veritabanı ayarlamaları yapılacaktır.
+- Oylama sonuçlarının hesaplanması ve ekrana basılması işlemleri tamamen **Django ORM**'in güçlü sorgu yetenekleriyle (F ifadeleri vb.) yönetilecektir.
 
 ### 3. Kullanıcı Deneyimi (UX) ve Yönlendirmeler
-- Ana sayfa (`/`) rotası boş bırakılıp 404 hatası vermek yerine, doğrudan `/polls/` (Oylama Listesi) sayfasına yönlendirilecek.
-- Sayfalar arası geçişlerde "Geri Dön", "Tekrar Oy Ver" gibi navigasyon butonları daha belirgin hale getirilecek.
-- (İsteğe bağlı) Sadece kayıtlı veya giriş yapmış kullanıcıların oy verebilmesi özelliği eklenebilir.
+- Ana sayfa (`/`) rotası, `urls.py` içerisinde bir `RedirectView` kullanılarak doğrudan `/polls/` (Oylama Listesi) sayfasına yönlendirilecektir.
+- Gelecek planları arasında sisteme giriş/çıkış entegrasyonu bulunursa, bu da tamamen **Django'nun yerleşik yetkilendirme (Authentication)** sistemi üzerinden kurgulanacaktır.
