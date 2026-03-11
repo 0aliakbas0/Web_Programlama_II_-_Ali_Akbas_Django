@@ -1,10 +1,8 @@
-# Teknofest Proje Fikri Oylama Sistemi (Django Tutorial Modifikasyonu)
+# CyberPoll - Siber Güvenlik Anketi Merkezi
 
-Bu proje, orijinal [Django 8 Parçalı Eğitimi'nin (Polls App)](https://docs.djangoproject.com/en/5.1/intro/tutorial01/) temel alınarak geliştirilmiş ve Teknofest projeleri, etkinlikleri veya genel oylamalar için modifiye edilecek olan bir web uygulamasıdır.
+Bu proje, orijinal Django "Polls" eğitim uygulamasının geliştirilerek tamamen modern ve kurumsal bir **"Siber Güvenlik Değerlendirme ve Zafiyet Anketi"** sistemine dönüştürülmüş halidir.
 
-Şu anki ilk sürüm, eğitimin orijinal **değiştirilmemiş** halidir.
-
----
+Proje, standart anket yapısını alıp Bootstrap 5 ve özel CSS/JS (Glassmorphism, Parallax arka planlar, akıcı sayaç animasyonları) ile destekleyerek birinci sınıf (premium) bir kullanıcı deneyimi sunmayı hedefler.
 
 ## Projeyi Çalıştırma Rehberi
 
@@ -17,7 +15,7 @@ Projeyi kendi bilgisayarınızda (lokalde) çalıştırmak için aşağıdaki ad
 ### Adımlar
 1. Terminal veya Komut İstemini (CMD) açın.
 2. Projenin ana klasörüne (`manage.py` dosyasının bulunduğu dizine) gidin.
-3. Veritabanını hazırlamak ve mevcut tablo yapılarını uygulamak için (ilk kez çalıştırılıyorsa):
+3. Veritabanını hazırlamak ve mevcut tablo yapılarını uygulamak için:
    ```bash
    python manage.py migrate
    ```
@@ -25,26 +23,27 @@ Projeyi kendi bilgisayarınızda (lokalde) çalıştırmak için aşağıdaki ad
    ```bash
    python manage.py runserver
    ```
-5. Tarayıcınızı açın ve şu adreslere gidin:
-   - **Anketler (Polls) Sayfası:** `http://127.0.0.1:8000/polls/`
+5. Tarayıcınızı açın ve sistemi test edin:
+   - **Ana Sayfa (Otomatik Yönlendirmeli):** `http://127.0.0.1:8000/` veya `http://127.0.0.1:8000/polls/`
    - **Yönetici (Admin) Paneli:** `http://127.0.0.1:8000/admin/`
 
-*(Admin paneli için eğer bir süper kullanıcı hesabı oluşturmadıysanız, `python manage.py createsuperuser` komutunu kullanarak oluşturabilirsiniz.)*
+*(Admin paneli üzerinden yeni anketler eklemek için `python manage.py createsuperuser` komutunu kullanarak bir yönetici hesabı oluşturabilirsiniz.)*
 
 ---
 
-## Gelecek Planları ve Modifikasyon Hedefleri
+## Projede Yapılan Modifikasyonlar ve Yenilikler (Vize/Final Teslimi İçin)
 
-Mesut Hoca'nın "Backend dahil tam çalışan, modifiye edilmiş sürüm olacak" beklentisi doğrultusunda projede yapılacak tüm geliştirmeler **tamamen Django altyapısı ve özellikleri kullanılarak** gerçekleştirilecektir.
+Proje, salt olarak eğitimdeki haliyle bırakılmayıp aşağıdaki geliştirmelerle zenginleştirilmiştir:
 
-### 1. Django Temelli Tasarım İyileştirmeleri
-- Orijinal düz HTML sayfaları, **Django Şablon Motoru (Template Engine)** kullanılarak daha dinamik ve şık tasarımlara (Bootstrap ile desteklenerek) entegre edilecektir. 
-- Harici bir önyüz framework'ü kullanılmadan, sayfa render işlemleri tamamen Django `views` (görünümler) üzerinden yapılacaktır.
+### 1. Premium UI/UX ve Modern Arayüz (Glassmorphism)
+- Orijinal düz liste yapıları yerine, modern "Glassmorphism" teknolojisi (buzlu cam görünümü ve blur efektleri) kullanılarak kartlar ve menüler oluşturulmuştur.
+- Animasyonlu gradient arka planlar ve mouse hareketine duyarlı (parallax) gezinen küre (orb) nesneleri eklenmiştir.
+- Sonuç ekranlarında JS destekli sayaçlar, renkli yüzdelik ilerleme (progress) çubukları ve etkileşimli "confetti" patlama efektleri yer almaktadır.
 
-### 2. Oylama Sistemi Modifikasyonları (Django ORM ve Views)
-- "Polls" (Anketler) konsepti, **"Teknofest Proje Oylama Sistemi"** yapısına çevrilecek ve bu kapsamda **Django Modelleri (Models)** üzerinde gerekli veritabanı ayarlamaları yapılacaktır.
-- Oylama sonuçlarının hesaplanması ve ekrana basılması işlemleri tamamen **Django ORM**'in güçlü sorgu yetenekleriyle (F ifadeleri vb.) yönetilecektir.
+### 2. Kavramsal Değişim: Siber Güvenlik Teması
+- Uygulama basit anketlerden öte, kurumsal şirketlerin siber güvenlik politikalarını ve güvenlik zafiyetlerini personeline oylattığı profesyonel bir araca (CyberPoll) dönüştürülmüştür.
+- İkon olarak Bootstrap Icons kütüphanesine ait güvenlik kalkanları, şifre ve grafik simgeleri tercih edilmiştir.
 
-### 3. Kullanıcı Deneyimi (UX) ve Yönlendirmeler
-- Ana sayfa (`/`) rotası, `urls.py` içerisinde bir `RedirectView` kullanılarak doğrudan `/polls/` (Oylama Listesi) sayfasına yönlendirilecektir.
-- Gelecek planları arasında sisteme giriş/çıkış entegrasyonu bulunursa, bu da tamamen **Django'nun yerleşik yetkilendirme (Authentication)** sistemi üzerinden kurgulanacaktır.
+### 3. Otomatik URL Yönlendirmesi
+- Kullanıcılar ana sayfa dizinine (`/`) girdiklerinde `RedirectView` kullanılarak otomatik olarak anketlerin olduğu (`/polls/`) dizinine aktarılmaktadır.
+- Oylama işlemindeki mantıksal yüzdelik hesaplamalar tamamen Django'nun `views.py` dosyası üzerinden handle edilerek şablona beslenmiştir.

@@ -35,6 +35,24 @@ class ResultsView(generic.DetailView):
     model = Question
     template_name = "polls/results.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        question = context['question']
+        choices = question.choice_set.all()
+        total_votes = sum(choice.votes for choice in choices)
+        
+        sorted_choices = []
+        for choice in choices:
+            percentage = (choice.votes / total_votes * 100) if total_votes > 0 else 0
+            choice.percentage = percentage
+            sorted_choices.append(choice)
+            
+        sorted_choices.sort(key=lambda x: x.votes, reverse=True)
+        
+        context['sorted_choices'] = sorted_choices
+        context['total_votes'] = total_votes
+        return context
+
 
 def vote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
