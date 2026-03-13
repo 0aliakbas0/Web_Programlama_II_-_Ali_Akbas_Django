@@ -9,33 +9,56 @@ from .models import Choice, Question
 
 
 class IndexView(generic.ListView):
+    """
+    Handles the display of the main index page, listing active questions.
+    """
     template_name = "polls/index.html"
     context_object_name = "latest_question_list"
 
     def get_queryset(self):
         """
-        Return the last five published questions (not including those set to be
-        published in the future).
+        Retrieves the standard queryset for the index view.
+        
+        Returns:
+            QuerySet: The top five most recently published questions, excluding future ones.
         """
         return Question.objects.filter(pub_date__lte=timezone.now()).order_by("-pub_date")[:5]
 
 
 class DetailView(generic.DetailView):
+    """
+    Handles the display of a specific question's voting form.
+    """
     model = Question
     template_name = "polls/detail.html"
     
     def get_queryset(self):
         """
-        Excludes any questions that aren't published yet.
+        Restrict the queryset to exclude unpublished (future) questions.
+        
+        Returns:
+            QuerySet: Questions published up to the current timestamp.
         """
         return Question.objects.filter(pub_date__lte=timezone.now())
 
 
 class ResultsView(generic.DetailView):
+    """
+    Handles the visualization of voting results for a specific question.
+    """
     model = Question
     template_name = "polls/results.html"
 
     def get_context_data(self, **kwargs):
+        """
+        Injects additional context, including percentage calculations for choices.
+        
+        Args:
+            **kwargs: Dictionary of keyword arguments to pass to the view.
+            
+        Returns:
+            dict: The context dictionary containing 'sorted_choices' and 'total_votes'.
+        """
         context = super().get_context_data(**kwargs)
         question = context['question']
         choices = question.choice_set.all()
@@ -55,11 +78,22 @@ class ResultsView(generic.DetailView):
 
 
 def vote(request, question_id):
+    """
+    Processes the voting submission for a given question.
+    
+    Args:
+        request (HttpRequest): The incoming HTTP request payload.
+        question_id (int): The primary key of the question being voted on.
+        
+    Returns:
+        HttpResponseRedirect: Redirects into the Results view on successful vote.
+        HttpResponse: Renders the detail view with an error message on failure.
+    """
     question = get_object_or_404(Question, pk=question_id)
     try:
         selected_choice = question.choice_set.get(pk=request.POST["choice"])
     except (KeyError, Choice.DoesNotExist):
-        # Redisplay the question voting form.
+        # Redisplay the question voting form due to missing choice parameter.
         return render(
             request,
             "polls/detail.html",
@@ -69,9 +103,8 @@ def vote(request, question_id):
             },
         )
     else:
+        # Atomic increment to prevent race conditions during high concurrency.
         selected_choice.votes = F("votes") + 1
         selected_choice.save()
-        # Always return an HttpResponseRedirect after successfully dealing
-        # with POST data. This prevents data from being posted twice if a
-        # user hits the Back button.
+        # Always return an HttpResponseRedirect after processing POST data.
         return HttpResponseRedirect(reverse("polls:results", args=(question.id,)))

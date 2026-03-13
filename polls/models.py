@@ -6,10 +6,18 @@ from django.utils import timezone
 
 
 class Question(models.Model):
+    """
+    Represents a specific poll question within the system.
+    
+    Attributes:
+        question_text (models.CharField): The text of the cyber security question being asked.
+        pub_date (models.DateTimeField): The date and time when the question was published.
+    """
     question_text = models.CharField(max_length=200)
     pub_date = models.DateTimeField("date published")
 
     def __str__(self):
+        """Returns the string representation of the model (the question text)."""
         return self.question_text
 
     @admin.display(
@@ -18,14 +26,29 @@ class Question(models.Model):
         description="Published recently?",
     )
     def was_published_recently(self):
+        """
+        Determines if the question was published within the last day.
+        
+        Returns:
+            bool: True if published within the last 24 hours (and not in the future), False otherwise.
+        """
         now = timezone.now()
         return now - datetime.timedelta(days=1) <= self.pub_date <= now
 
 
 class Choice(models.Model):
+    """
+    Represents a single answer choice associated with a specific Question.
+    
+    Attributes:
+        question (models.ForeignKey): The Question this choice belongs to.
+        choice_text (models.CharField): The text content of the choice.
+        votes (models.IntegerField): The total number of votes this choice has received.
+    """
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     choice_text = models.CharField(max_length=200)
     votes = models.IntegerField(default=0)
 
     def __str__(self):
+        """Returns the string representation of the specific choice."""
         return self.choice_text
