@@ -42,11 +42,11 @@
                 </div>
                 <div class="results-body">
                     {% for choice in sorted_choices %}
-                        <div class="result-row {% if forloop.first %}winner{% endif %}" style="animation-delay: {{ forloop.counter0 }}50ms;" data-percentage="{{ choice.percentage }}">
+                        <div class="result-row {% if choice.votes == sorted_choices.0.votes and total_votes > 0 %}winner{% endif %}" style="animation-delay: {{ forloop.counter0 }}50ms;" data-percentage="{{ choice.percentage }}">
                             <div class="result-top">
                                 <span class="result-label">
                                     {{ choice.choice_text }}
-                                    {% if forloop.first %}<span class="winner-badge"><i class="bi bi-trophy-fill me-1"></i>1. Sıra</span>{% endif %}
+                                    {% if choice.votes == sorted_choices.0.votes and total_votes > 0 %}<span class="winner-badge"><i class="bi bi-trophy-fill me-1"></i>1. Sıra</span>{% endif %}
                                 </span>
                                 <span class="result-votes">{{ choice.votes }} oy</span>
                             </div>

@@ -39,6 +39,20 @@
             </div>
             <h1>Siber Güvenlik<br>Değerlendirme Merkezi</h1>
             <p>Kurumsal güvenlik politikaları, tehdit analizi ve zafiyet değerlendirmeleri hakkındaki anketlere katılarak görüşlerinizi paylaşın.</p>
+            
+            <!-- Component: Search Bar -->
+            <div class="search-container mt-4">
+                <form action="{% url 'polls:index' %}" method="get" class="search-form">
+                    <div class="input-group-cyber">
+                        <i class="bi bi-search search-icon"></i>
+                        <input type="text" name="q" value="{{ search_query }}" placeholder="Anketlerde ara..." class="form-control-cyber">
+                        {% if search_query %}
+                            <a href="{% url 'polls:index' %}" class="clear-search"><i class="bi bi-x-lg"></i></a>
+                        {% endif %}
+                        <button type="submit" class="btn-cyber">Ara</button>
+                    </div>
+                </form>
+            </div>
         </div>
 
         <!-- Component: Statistics Overview -->
@@ -122,10 +136,10 @@
          * Initializes animations once the window has fully loaded.
          */
         window.addEventListener('load', () => {
-            const anketCount = document.querySelectorAll('.poll-card').length;
+            const anketCount = {{ latest_question_list|length }};
             animateCounter(document.getElementById('anketSayisi'), anketCount, 1500);
-            animateCounter(document.getElementById('katilimci'), 128, 2000);
-            animateCounter(document.getElementById('tamamlanan'), 45, 1800);
+            animateCounter(document.getElementById('katilimci'), {{ total_votes_all|default:0 }}, 2000);
+            animateCounter(document.getElementById('tamamlanan'), {{ completed_polls_count|default:0 }}, 1800);
         });
 
         /**

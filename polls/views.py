@@ -1,3 +1,4 @@
+from django.db import models
 from django.db.models import F
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
@@ -17,12 +18,31 @@ class IndexView(generic.ListView):
 
     def get_queryset(self):
         """
-        Retrieves the standard queryset for the index view.
+        Retrieves the standard queryset for the index view, with optional search filtering.
         
         Returns:
-            QuerySet: The top five most recently published questions, excluding future ones.
+            QuerySet: The filtered and ordered questions, excluding future ones.
         """
-        return Question.objects.filter(pub_date__lte=timezone.now()).order_by("-pub_date")[:5]
+        query = self.request.GET.get("q")
+        queryset = Question.objects.filter(pub_date__lte=timezone.now())
+        if query:
+            queryset = queryset.filter(question_text__icontains=query)
+        return queryset.order_by("-pub_date")[:5]
+
+    def get_context_data(self, **kwargs):
+        """
+        Injects system-wide statistics into the index context.
+        """
+        context = super().get_context_data(**kwargs)
+        all_questions = Question.objects.filter(pub_date__lte=timezone.now())
+        
+        total_votes = sum(choice.votes for q in all_questions for choice in q.choice_set.all())
+        completed_polls = sum(1 for q in all_questions if q.choice_set.aggregate(models.Sum('votes'))['votes__sum'] or 0 > 0)
+        
+        context['total_votes_all'] = total_votes
+        context['completed_polls_count'] = completed_polls
+        context['search_query'] = self.request.GET.get("q", "")
+        return context
 
 
 class DetailView(generic.DetailView):
