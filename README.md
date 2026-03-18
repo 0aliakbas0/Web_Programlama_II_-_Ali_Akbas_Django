@@ -47,3 +47,18 @@ Proje, salt olarak eğitimdeki haliyle bırakılmayıp aşağıdaki geliştirmel
 ### 3. Otomatik URL Yönlendirmesi
 - Kullanıcılar ana sayfa dizinine (`/`) girdiklerinde `RedirectView` kullanılarak otomatik olarak anketlerin olduğu (`/polls/`) dizinine aktarılmaktadır.
 - Oylama işlemindeki mantıksal yüzdelik hesaplamalar tamamen Django'nun `views.py` dosyası üzerinden handle edilerek şablona beslenmiştir.
+
+## Proje Yapısı ve Teknik Detaylar
+
+- **Backend:** Django 5.1+, Python 3.10+
+- **Frontend:** HTML5, Vanilla CSS, JS (ES6), Bootstrap 5.3, Bootstrap Icons
+- **Performans:** Veritabanı sorguları (Aggregation ve ORM optimizasyonu) ile normalize edilmiştir.
+- **Güvenlik:** Django'nun yerleşik CSRF koruması, SQL Injection koruması ve XSS koruması aktif olarak kullanılmaktadır.
+
+### Öne Çıkan Özellikler
+
+- 🔍 **Gelişmiş Arama:** Anketler arasında başlığa göre gerçek zamanlı filtreleme.
+- 📊 **Dinamik İstatistikler:** Toplam katılım ve tamamlanan anket sayıları veritabanından anlık hesaplanır.
+- 🛡️ **Cyber Admin:** Django yönetim paneli, projenin görsel kimliğiyle (Cyberpunk tema) tamamen uyumlu hale getirilmiştir.
+- 📱 **Tam Responsive:** Mobil, tablet ve masaüstü cihazlar için optimize edilmiş akıcı arayüz.
+- 🏆 **Akıllı Sonuçlar:** Oylama sonuçlarında kazanan/kazananlar otomatik olarak tespit edilir ve ödüllendirilir.
