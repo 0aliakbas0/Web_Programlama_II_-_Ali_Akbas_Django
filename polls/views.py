@@ -31,13 +31,21 @@ class IndexView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         """
-        Injects system-wide statistics into the index context.
+        Injects system-wide statistics into the index context using optimized queries.
         """
         context = super().get_context_data(**kwargs)
-        all_questions = Question.objects.filter(pub_date__lte=timezone.now())
+        now = timezone.now()
         
-        total_votes = sum(choice.votes for q in all_questions for choice in q.choice_set.all())
-        completed_polls = sum(1 for q in all_questions if q.choice_set.aggregate(models.Sum('votes'))['votes__sum'] or 0 > 0)
+        # Optimized: Single aggregation for total votes across active polls
+        total_votes = Choice.objects.filter(
+            question__pub_date__lte=now
+        ).aggregate(models.Sum('votes'))['votes__sum'] or 0
+        
+        # Optimized: Count distinct questions that have at least one vote
+        completed_polls = Question.objects.filter(
+            pub_date__lte=now,
+            choice__votes__gt=0
+        ).distinct().count()
         
         context['total_votes_all'] = total_votes
         context['completed_polls_count'] = completed_polls
