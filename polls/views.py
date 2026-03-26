@@ -60,6 +60,16 @@ class DetailView(generic.DetailView):
     model = Question
     template_name = "polls/detail.html"
     
+    def get_object(self, queryset=None):
+        """
+        Retrieves the question object and increments its view count.
+        """
+        obj = super().get_object(queryset=queryset)
+        obj.views = F('views') + 1
+        obj.save(update_fields=['views'])
+        obj.refresh_from_db()
+        return obj
+
     def get_queryset(self):
         """
         Restrict the queryset to exclude unpublished (future) questions.
