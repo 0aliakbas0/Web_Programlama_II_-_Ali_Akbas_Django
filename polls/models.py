@@ -5,6 +5,21 @@ from django.db import models
 from django.utils import timezone
 
 
+class Category(models.Model):
+    """
+    Groups questions by specific cyber security topics.
+    """
+    name = models.CharField(max_length=50, unique=True)
+    description = models.TextField(blank=True)
+    icon = models.CharField(max_length=30, default="bi-shield")
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = "Categories"
+
+
 class Question(models.Model):
     """
     Represents a specific poll question within the system.
@@ -12,9 +27,13 @@ class Question(models.Model):
     Attributes:
         question_text (models.CharField): The text of the cyber security question being asked.
         pub_date (models.DateTimeField): The date and time when the question was published.
+        category (models.ForeignKey): The theme or category of this question.
+        views (models.IntegerField): Total times this question's detail page was accessed.
     """
     question_text = models.CharField(max_length=200)
     pub_date = models.DateTimeField("date published")
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
+    views = models.IntegerField(default=0)
 
     def __str__(self):
         """Returns the string representation of the model (the question text)."""
