@@ -78,12 +78,24 @@
                 {% for question in latest_question_list %}
                     <a href="{% url 'polls:detail' question.id %}" class="poll-card" style="animation-delay: {{ forloop.counter0 }}00ms;">
                         <div class="card-icon">
-                            <i class="bi bi-clipboard2-data-fill"></i>
+                            {% if question.category %}
+                                <i class="bi {{ question.category.icon }}"></i>
+                            {% else %}
+                                <i class="bi bi-clipboard2-data-fill"></i>
+                            {% endif %}
+                        </div>
+                        <div class="card-badges">
+                            {% if question.category %}
+                                <span class="badge-category">{{ question.category.name }}</span>
+                            {% endif %}
+                            {% if question.views > 10 %}
+                                <span class="badge-trending"><i class="bi bi-fire me-1"></i>Popüler</span>
+                            {% endif %}
                         </div>
                         <h3>{{ question.question_text }}</h3>
                         <p class="card-desc">Bu güvenlik değerlendirme anketine katılarak kurumsal güvenlik politikalarının şekillendirilmesine katkı sağlayın.</p>
                         <div class="card-footer-custom">
-                            <span class="card-tag"><i class="bi bi-lightning-charge-fill me-1"></i>Anket Aktif</span>
+                            <span class="card-tag"><i class="bi bi-eye-fill me-1"></i>{{ question.views }} İzlenme</span>
                             <span class="card-arrow"><i class="bi bi-arrow-right"></i></span>
                         </div>
                     </a>
