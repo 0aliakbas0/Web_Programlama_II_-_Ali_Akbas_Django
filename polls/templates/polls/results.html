@@ -34,9 +34,20 @@
 
             <div class="results-card">
                 <div class="results-header">
-                    <div class="r-icon"><i class="bi bi-bar-chart-fill"></i></div>
+                    <div class="r-icon">
+                        {% if question.category %}
+                            <i class="bi {{ question.category.icon }}"></i>
+                        {% else %}
+                            <i class="bi bi-bar-chart-fill"></i>
+                        {% endif %}
+                    </div>
                     <div>
-                        <h1>Oylama Sonuçları</h1>
+                        <div class="d-flex align-items-center gap-2 mb-1">
+                            <h1 class="mb-0">Oylama Sonuçları</h1>
+                            {% if question.category %}
+                                <span class="badge-category">{{ question.category.name }}</span>
+                            {% endif %}
+                        </div>
                         <p class="subtitle">{{ question.question_text }}</p>
                     </div>
                 </div>
